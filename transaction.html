@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Finora — Transactions</title>
+  <meta name="description" content="View and manage your personal finance transactions with Finora.">
+
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --surface: #ffffff;
+      --surface-soft: #f8f6f1;
+      --text: #171817;
+      --muted: #747770;
+      --border: #e7e4dc;
+      --accent: #3f765d;
+      --accent-dark: #315e4a;
+      --terracotta: #b95f3c;
+      --red: #b64d48;
+      --navy: #202827;
+      --shadow: 0 16px 40px rgba(30, 32, 29, 0.07);
+      --radius: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 40px));
+      margin: auto;
+    }
+
+    /* HEADER */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(244, 241, 234, 0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(231, 228, 220, 0.85);
+    }
+
+    .navbar {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      background: var(--navy);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      color: #565a54;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-links a {
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-button,
+    .profile-button {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      height: 42px;
+      border-radius: 13px;
+    }
+
+    .icon-button {
+      width: 42px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+    }
+
+    .profile-button {
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .avatar {
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      background: #d8c2a7;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 0;
+      background: transparent;
+      font-size: 25px;
+    }
+
+    .mobile-menu {
+      display: none;
+      padding: 5px 0 18px;
+    }
+
+    .mobile-menu a {
+      display: block;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* PAGE HERO */
+
+    .page-hero {
+      padding: 55px 0 25px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      font-weight: 800;
+      margin-bottom: 9px;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(35px, 5vw, 50px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 12px;
+    }
+
+    .page-hero p {
+      color: var(--muted);
+      max-width: 620px;
+      font-size: 14px;
+    }
+
+    /* SUMMARY */
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 20px 0 28px;
+    }
+
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 21px;
+      box-shadow: 0 7px 25px rgba(30, 32, 29, 0.04);
+    }
+
+    .summary-card small {
+      color: var(--muted);
+      font-size: 12px;
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 25px;
+      letter-spacing: -0.8px;
+    }
+
+    .summary-card span {
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .income {
+      color: var(--accent);
+    }
+
+    .expense {
+      color: var(--red);
+    }
+
+    .balance {
+      color: var(--navy);
+    }
+
+    /* TRANSACTION PANEL */
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-top {
+      padding: 21px 23px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .panel-top h2 {
+      font-size: 17px;
+      letter-spacing: -0.4px;
+    }
+
+    .add-button {
+      border: 0;
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .add-button:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    /* FILTERS */
+
+    .filters {
+      padding: 18px 23px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1.4fr 0.7fr 0.7fr;
+      gap: 10px;
+    }
+
+    .search-box,
+    .filter-select {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      border-radius: 10px;
+      padding: 11px 12px;
+      outline: none;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .search-box:focus,
+    .filter-select:focus {
+      border-color: var(--accent);
+    }
+
+    /* TABLE */
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th {
+      text-align: left;
+      padding: 14px 23px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 800;
+    }
+
+    td {
+      padding: 15px 23px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    .transaction-name {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .transaction-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: var(--surface-soft);
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .transaction-name strong {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
+    .transaction-name small {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .category {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 7px;
+      background: #eef3ef;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .date {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .amount {
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .amount.income {
+      color: var(--accent);
+    }
+
+    .amount.expense {
+      color: var(--red);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .empty-state {
+      display: none;
+      padding: 55px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .empty-state strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    /* FOOTER */
+
+    footer {
+      margin-top: 55px;
+      background: var(--navy);
+      color: #fff;
+      padding: 45px 0 25px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, 1fr);
+      gap: 35px;
+    }
+
+    .footer-brand p {
+      color: #aeb5af;
+      font-size: 12px;
+      max-width: 280px;
+      margin-top: 13px;
+    }
+
+    footer h4 {
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
+
+    footer a {
+      display: block;
+      color: #aeb5af;
+      font-size: 12px;
+      margin-bottom: 9px;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
+
+    .copyright {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin-top: 35px;
+      padding-top: 18px;
+      color: #8f9791;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    /* TOAST */
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: var(--navy);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 11px;
+      font-size: 12px;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 2000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .profile-button {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .mobile-menu.show {
+        display: block;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filters {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .search-box {
+        grid-column: 1 / -1;
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-brand {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: min(100% - 26px, 1180px);
+      }
+
+      .navbar {
+        height: 68px;
+      }
+
+      .page-hero {
+        padding-top: 35px;
+      }
+
+      .page-hero h1 {
+        font-size: 38px;
+      }
+
+      .panel-top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .add-button {
+        width: 100%;
+      }
+
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .search-box {
+        grid-column: auto;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .copyright {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+
+      <nav class="navbar">
+
+        <a href="index.html" class="logo">
+          <span class="logo-mark">F</span>
+          <span>Finora</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="index.html">Dashboard</a>
+          <a href="transactions.html" class="active">Transactions</a>
+          <a href="budget.html">Budget</a>
+          <a href="savings.html">Savings</a>
+          <a href="analytics.html">Analytics</a>
+        </div>
+
+        <div class="nav-actions">
+
+          <button
+            class="icon-button"
+            onclick="showToast('Search is available below')"
+            aria-label="Search"
+          >
+            ⌕
+          </button>
+
+          <button
+            class="profile-button"
+            onclick="showToast('Profile settings coming soon')"
+          >
+            <span class="avatar">BK</span>
+            <span>Profile</span>
+          </button>
+
+          <button
+            class="menu-toggle"
+            onclick="toggleMenu()"
+            aria-label="Open menu"
+          >
+            ☰
+          </button>
+
+        </div>
+
+      </nav>
+
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Dashboard</a>
+        <a href="transactions.html">Transactions</a>
+        <a href="budget.html">Budget</a>
+        <a href="savings.html">Savings</a>
+        <a href="analytics.html">Analytics</a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- MAIN -->
+  <main>
+
+    <section class="page-hero">
+      <div class="container">
+
+        <div class="eyebrow">Money activity</div>
+
+        <h1>Transactions</h1>
+
+        <p>
+          Keep track of your income and spending in one clear,
+          organized view.
+        </p>
+
+      </div>
+    </section>
+
+
+    <!-- SUMMARY -->
+    <section>
+      <div class="container">
+
+        <div class="summary-grid">
+
+          <div class="summary-card">
+            <small>Total income</small>
+            <strong class="income">$6,420.00</strong>
+            <span class="income">↑ 12.5% this month</span>
+          </div>
+
+          <div class="summary-card">
+            <small>Total expenses</small>
+            <strong class="expense">$3,180.30</strong>
+            <span class="expense">↑ 4.2% this month</span>
+          </div>
+
+          <div class="summary-card">
+            <small>Net balance</small>
+            <strong class="balance">$3,239.70</strong>
+            <span class="income">↑ 8.4% this month</span>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- TRANSACTIONS -->
+    <section>
+      <div class="container">
+
+        <div class="panel">
+
+          <div class="panel-top">
+
+            <div>
+              <h2>All transactions</h2>
+            </div>
+
+            <button
+              class="add-button"
+              onclick="showToast('Add transaction feature coming soon')"
+            >
+              + Add transaction
+            </button>
+
+          </div>
+
+
+          <!-- FILTERS -->
+          <div class="filters">
+
+            <input
+              type="search"
+              id="searchInput"
+              class="search-box"
+              placeholder="Search transactions..."
+              oninput="filterTransactions()"
+            >
+
+            <select
+              id="typeFilter"
+              class="filter-select"
+              onchange="filterTransactions()"
+            >
+              <option value="all">All types</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+
+            <select
+              id="categoryFilter"
+              class="filter-select"
+              onchange="filterTransactions()"
+            >
+              <option value="all">All categories</option>
+              <option value="income">Income</option>
+              <option value="food">Food</option>
+              <option value="transport">Transport</option>
+              <option value="shopping">Shopping</option>
+              <option value="investment">Investment</option>
+              <option value="housing">Housing</option>
+            </select>
+
+          </div>
+
+
+          <!-- TABLE -->
+          <div class="table-wrapper">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Transaction</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+
+              <tbody id="transactionBody">
+
+                <tr
+                  class="transaction-row"
+                  data-name="Monthly Salary"
+                  data-type="income"
+                  data-category="income"
+                >
+                  <td>
+                    <div class="transaction-name">
+                      <div class="transaction-icon">💼</div>
+                      <div>
+                        <strong>Monthly Salary</strong>
+                        <small>Salary deposit</small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="category">Income</span>
+                  </td>
+
+                  <td>
+                    <span class="date">Sep 19, 2026</span>
+                  </td>
+
+                  <td>
+                    <span class="status">
+                      <i class="status-dot"></i>
+                      Completed
+                    </span>
+                  </td>
+
+                  <td class="amount income">+$4,200.00</td>
+                </tr>
+
+
+                <tr
+                  class="transaction-row"
+                  data-name="Grocery Market"
+                  data-type="expense"
+                  data-category="food"
+                >
+                  <td>
+                    <div class="transaction-name">
+                      <div class="transaction-icon">🛒</div>
+                      <div>
+                        <strong>Grocery Market</strong>
+                        <small>Weekly groceries</small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="category">Food</span>
+                  </td>
+
+                  <td>
+                    <span class="date">Sep 19, 2026</span>
+                  </td>
+
+                  <td>
+                    <span class="status">
+                      <i class="status-dot"></i>
+                      Completed
+                    </span>
+                  </td>
+
+                  <td class="amount expense">-$84.20</td>
+                </tr>
+
+
+                <tr
+                  class="transaction-row"
+                  data-name="City Transport"
+                  data-type="expense"
+                  data-category="transport"
+                >
+                  <td>
+                    <div class="transaction-name">
+                      <div class="transaction-icon">🚕</div>
+                      <div>
+                        <strong>City Transport</strong>
+                        <small>Daily transportation</small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="category">Transport</span>
+                  </td>
+
+                  <td>
+                    <span class="date">Sep 18, 2026</span>
+                  </td>
+
+                  <td>
+                    <span class="status">
+                      <i class="status-dot"></i>
+                      Completed
+                    </span>
+                  </td>
+
+                  <td class="amount expense">-$32.50</td>
+                </tr>
+
+
+                <tr
+                  class="transaction-row"
+                  data-name="Coffee House"
+                  data-type="expense"
+                  data-category="food"
+                >
+                  <td>
+                    <div class="transaction-name">
+                      <div class="transaction-icon">☕</div>
+                      <div>
+                        <strong>Coffee House</strong>
+                        <small>Coffee and breakfast</small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="category">Food</span>
+                  </td>
+
+                  <td>
+                    <span class="date">Sep 18, 2026</span>
+                  </td>
+
+                  <td>
+                    <span class="status">
+                      <i class="status-dot"></i>
+                      Completed
+                    </span>
+                  </td>
+
+                  <td class="amount expense">-$12.80</td>
+                </tr>
+
+
+                <tr
+                  class="transaction-row"
+                  data-name="Investment Return"
+                  data-type="income"
+                  data-category="investment"
+                >
+                  <td>
+                    <div class="transaction-name">
+                      <div class="transaction-icon">↗</div>
+                      <div>
+                        <strong>Investment Return</strong>
+                        <small>Portfolio return</small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="category">Investment</span>
+                  </td>
+
+                  <td>
+                    <span class="date">Sep 17, 2026</span>
+                  </td>
+
+                  <td>
+                    <span class="status">
+                      <i class="status-dot"></i>
+                      Completed
+                    </span>
+                  </td>
+
+                  <td class="amount income">+$185.40</td>
+                </tr>
+
+
+                <tr
+                  class="transaction-row"
+                  data-name="Online Shopping"
+                  data-type="expense"
+                  data-category="shopping"
+                >
+                  <td>
+                    <div class="transaction-name">
+                      <div class="transaction-icon">🛍</div>
+                      <div>
+                        <strong>Online Shopping</strong>
+                        <small>Personal purchase</small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="category">Shopping</span>
+                  </td>
+
+                  <td>
+                    <span class="date">Sep 16, 2026</span>
+                  </td>
+
+                  <td>
+                    <span class="status">
+                      <i class="status-dot"></i>
+                      Completed
+                    </span>
+                  </td>
+
+                  <td class="amount expense">-$126.90</td>
+                </tr>
+
+
+                <tr
+                  class="transaction-row"
+                  data-name="Apartment Rent"
+                  data-type="expense"
+                  data-category="housing"
+                >
+                  <td>
+                    <div class="transaction-name">
+                      <div class="transaction-icon">⌂</div>
+                      <div>
+                        <strong>Apartment Rent</strong>
+                        <small>Monthly housing</small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="category">Housing</span>
+                  </td>
+
+                  <td>
+                    <span class="date">Sep 15, 2026</span>
+                  </td>
+
+                  <td>
+                    <span class="status">
+                      <i class="status-dot"></i>
+                      Completed
+                    </span>
+                  </td>
+
+                  <td class="amount expense">-$1,200.00</td>
+                </tr>
+
+
+                <tr
+                  class="transaction-row"
+                  data-name="Freelance Payment"
+                  data-type="income"
+                  data-category="income"
+                >
+                  <td>
+                    <div class="transaction-name">
+                      <div class="transaction-icon">✦</div>
+                      <div>
+                        <strong>Freelance Payment</strong>
+                        <small>Client project</small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="category">Income</span>
+                  </td>
+
+                  <td>
+                    <span class="date">Sep 14, 2026</span>
+                  </td>
+
+                  <td>
+                    <span class="status">
+                      <i class="status-dot"></i>
+                      Completed
+                    </span>
+                  </td>
+
+                  <td class="amount income">+$620.00</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <div class="empty-state" id="emptyState">
+            <strong>No transactions found</strong>
+            Try changing your search or filters.
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div class="footer-brand">
+
+          <div class="logo">
+            <span class="logo-mark">F</span>
+            <span>Finora</span>
+          </div>
+
+          <p>
+            A modern personal finance experience designed to make
+            money management simpler and clearer.
+          </p>
+
+        </div>
+
+
+        <div>
+          <h4>Product</h4>
+          <a href="transactions.html">Transactions</a>
+          <a href="budget.html">Budget</a>
+          <a href="savings.html">Savings</a>
+          <a href="analytics.html">Analytics</a>
+        </div>
+
+
+        <div>
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+        </div>
+
+
+        <div>
+          <h4>Resources</h4>
+          <a href="#">Financial Guide</a>
+          <a href="#">Help Center</a>
+          <a href="#">Security</a>
+          <a href="#">Updates</a>
+        </div>
+
+      </div>
+
+
+      <div class="copyright">
+        <span>© 2026 Finora. All rights reserved.</span>
+        <span>Built for modern money management.</span>
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <div class="toast" id="toast"></div>
+
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("mobileMenu");
+      menu.classList.toggle("show");
+    }
+
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(window.finoraToastTimer);
+
+      window.finoraToastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+
+
+    function filterTransactions() {
+      const searchValue =
+        document.getElementById("searchInput").value
+          .toLowerCase()
+          .trim();
+
+      const typeValue =
+        document.getElementById("typeFilter").value;
+
+      const categoryValue =
+        document.getElementById("categoryFilter").value;
+
+      const rows =
+        document.querySelectorAll(".transaction-row");
+
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+
+        const name =
+          row.dataset.name.toLowerCase();
+
+        const type =
+          row.dataset.type;
+
+        const category =
+          row.dataset.category;
+
+        const matchesSearch =
+          name.includes(searchValue);
+
+        const matchesType =
+          typeValue === "all" ||
+          type === typeValue;
+
+        const matchesCategory =
+          categoryValue === "all" ||
+          category === categoryValue;
+
+        const shouldShow =
+          matchesSearch &&
+          matchesType &&
+          matchesCategory;
+
+        row.style.display =
+          shouldShow ? "" : "none";
+
+        if (shouldShow) {
+          visibleCount++;
+        }
+
+      });
+
+
+      const emptyState =
+        document.getElementById("emptyState");
+
+      emptyState.style.display =
+        visibleCount === 0 ? "block" : "none";
+    }
+
+
+    document.addEventListener("click", function(event) {
+
+      const menu =
+        document.getElementById("mobileMenu");
+
+      const toggle =
+        document.querySelector(".menu-toggle");
+
+      if (
+        menu.classList.contains("show") &&
+        !menu.contains(event.target) &&
+        !toggle.contains(event.target)
+      ) {
+        menu.classList.remove("show");
+      }
+
+    });
+  </script>
+
+</body>
+  </html>
