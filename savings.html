@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Finora — Savings</title>
+  <meta name="description" content="Set savings goals, track progress and build better saving habits with Finora.">
+
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --surface: #ffffff;
+      --surface-soft: #f8f6f1;
+      --text: #171817;
+      --muted: #747770;
+      --border: #e7e4dc;
+      --accent: #3f765d;
+      --accent-dark: #315e4a;
+      --terracotta: #b95f3c;
+      --red: #b64d48;
+      --navy: #202827;
+      --gold: #b38a4b;
+      --shadow: 0 16px 40px rgba(30, 32, 29, 0.07);
+      --radius: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 40px));
+      margin: auto;
+    }
+
+    /* HEADER */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(244, 241, 234, 0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(231, 228, 220, 0.85);
+    }
+
+    .navbar {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      background: var(--navy);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      color: #565a54;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-links a {
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-button,
+    .profile-button {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      height: 42px;
+      border-radius: 13px;
+    }
+
+    .icon-button {
+      width: 42px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+    }
+
+    .profile-button {
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .avatar {
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      background: #d8c2a7;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 0;
+      background: transparent;
+      font-size: 25px;
+    }
+
+    .mobile-menu {
+      display: none;
+      padding: 5px 0 18px;
+    }
+
+    .mobile-menu a {
+      display: block;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* HERO */
+
+    .page-hero {
+      padding: 55px 0 25px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      font-weight: 800;
+      margin-bottom: 9px;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(35px, 5vw, 50px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 12px;
+    }
+
+    .page-hero p {
+      color: var(--muted);
+      max-width: 650px;
+      font-size: 14px;
+    }
+
+    /* SUMMARY */
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr 0.9fr;
+      gap: 15px;
+      margin: 20px 0 32px;
+    }
+
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 23px;
+      box-shadow: 0 7px 25px rgba(30, 32, 29, 0.04);
+    }
+
+    .summary-card.highlight {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .highlight .summary-label {
+      color: #b9c0ba;
+    }
+
+    .summary-value {
+      font-size: 29px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .summary-note {
+      margin-top: 5px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .green {
+      color: var(--accent);
+    }
+
+    .highlight .green {
+      color: #9bc4ad;
+    }
+
+    .orange {
+      color: var(--terracotta);
+    }
+
+    /* MAIN GRID */
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 17px;
+    }
+
+    .section-heading h2 {
+      font-size: 19px;
+      letter-spacing: -0.5px;
+    }
+
+    .add-button {
+      border: 0;
+      background: var(--accent);
+      color: #fff;
+      padding: 11px 15px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 800;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .add-button:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 17px;
+    }
+
+    .goal-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 23px;
+      box-shadow: var(--shadow);
+    }
+
+    .goal-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      margin-bottom: 20px;
+    }
+
+    .goal-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: var(--surface-soft);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .goal-info {
+      flex: 1;
+    }
+
+    .goal-info h3 {
+      font-size: 15px;
+      margin-bottom: 3px;
+    }
+
+    .goal-info p {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .goal-menu {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .goal-amount {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 9px;
+    }
+
+    .saved {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+    }
+
+    .target {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .progress {
+      height: 9px;
+      background: #ece9e2;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+    }
+
+    .goal-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 9px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .goal-footer strong {
+      color: var(--text);
+    }
+
+    /* LOWER SECTION */
+
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-top: 30px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .panel h2 {
+      font-size: 17px;
+      margin-bottom: 20px;
+      letter-spacing: -0.4px;
+    }
+
+    /* SAVING ACTIVITY */
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .activity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .activity:first-child {
+      padding-top: 0;
+    }
+
+    .activity:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .activity-icon {
+      width: 39px;
+      height: 39px;
+      border-radius: 11px;
+      background: #eef4ef;
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .activity-info {
+      flex: 1;
+    }
+
+    .activity-info strong {
+      display: block;
+      font-size: 12px;
+    }
+
+    .activity-info small {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .activity-amount {
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    /* TARGET PLAN */
+
+    .plan-card {
+      background: var(--surface-soft);
+      border-radius: 15px;
+      padding: 17px;
+      margin-bottom: 12px;
+    }
+
+    .plan-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 12px;
+    }
+
+    .plan-top strong {
+      font-size: 12px;
+    }
+
+    .plan-top span {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .plan-card p {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 8px;
+    }
+
+    .plan-card .progress {
+      height: 7px;
+    }
+
+    /* CTA */
+
+    .saving-cta {
+      margin-top: 30px;
+      padding: 28px;
+      border-radius: var(--radius);
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .saving-cta h2 {
+      font-size: 20px;
+      letter-spacing: -0.6px;
+      margin-bottom: 5px;
+    }
+
+    .saving-cta p {
+      color: #aeb5af;
+      font-size: 11px;
+      max-width: 520px;
+    }
+
+    .cta-button {
+      flex-shrink: 0;
+      border: 0;
+      background: #fff;
+      color: var(--navy);
+      padding: 12px 17px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    /* FOOTER */
+
+    footer {
+      margin-top: 55px;
+      background: var(--navy);
+      color: #fff;
+      padding: 45px 0 25px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, 1fr);
+      gap: 35px;
+    }
+
+    .footer-brand p {
+      color: #aeb5af;
+      font-size: 12px;
+      max-width: 280px;
+      margin-top: 13px;
+    }
+
+    footer h4 {
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
+
+    footer a {
+      display: block;
+      color: #aeb5af;
+      font-size: 12px;
+      margin-bottom: 9px;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
+
+    .copyright {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin-top: 35px;
+      padding-top: 18px;
+      color: #8f9791;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    /* TOAST */
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: var(--navy);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 11px;
+      font-size: 12px;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 2000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .profile-button {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .mobile-menu.show {
+        display: block;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .summary-card.highlight {
+        grid-column: 1 / -1;
+      }
+
+      .goals-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lower-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-brand {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: min(100% - 26px, 1180px);
+      }
+
+      .navbar {
+        height: 68px;
+      }
+
+      .page-hero {
+        padding-top: 35px;
+      }
+
+      .page-hero h1 {
+        font-size: 38px;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-card.highlight {
+        grid-column: auto;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .goal-card,
+      .panel {
+        padding: 20px;
+      }
+
+      .saving-cta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .copyright {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+
+      <nav class="navbar">
+
+        <a href="index.html" class="logo">
+          <span class="logo-mark">F</span>
+          <span>Finora</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="index.html">Dashboard</a>
+          <a href="transactions.html">Transactions</a>
+          <a href="budget.html">Budget</a>
+          <a href="savings.html" class="active">Savings</a>
+          <a href="analytics.html">Analytics</a>
+        </div>
+
+        <div class="nav-actions">
+
+          <button
+            class="icon-button"
+            onclick="showToast('Search feature coming soon')"
+            aria-label="Search"
+          >
+            ⌕
+          </button>
+
+          <button
+            class="profile-button"
+            onclick="showToast('Profile settings coming soon')"
+          >
+            <span class="avatar">BK</span>
+            <span>Profile</span>
+          </button>
+
+          <button
+            class="menu-toggle"
+            onclick="toggleMenu()"
+            aria-label="Open menu"
+          >
+            ☰
+          </button>
+
+        </div>
+
+      </nav>
+
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Dashboard</a>
+        <a href="transactions.html">Transactions</a>
+        <a href="budget.html">Budget</a>
+        <a href="savings.html">Savings</a>
+        <a href="analytics.html">Analytics</a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- HERO -->
+    <section class="page-hero">
+      <div class="container">
+
+        <div class="eyebrow">Build your future</div>
+
+        <h1>Savings</h1>
+
+        <p>
+          Create meaningful savings goals, track your progress and
+          turn small contributions into long-term financial progress.
+        </p>
+
+      </div>
+    </section>
+
+
+    <!-- SUMMARY -->
+    <section>
+      <div class="container">
+
+        <div class="summary-grid">
+
+          <div class="summary-card highlight">
+            <div class="summary-label">Total saved</div>
+            <div class="summary-value">$8,420</div>
+            <div class="summary-note green">
+              +$620 this month
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Active goals</div>
+            <div class="summary-value">4</div>
+            <div class="summary-note green">
+              2 goals on track
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Monthly saving rate</div>
+            <div class="summary-value">18.4%</div>
+            <div class="summary-note orange">
+              +2.1% from last month
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- GOALS -->
+    <section>
+      <div class="container">
+
+        <div class="section-heading">
+
+          <h2>Savings goals</h2>
+
+          <button
+            class="add-button"
+            onclick="showToast('Create goal feature coming soon')"
+          >
+            + New goal
+          </button>
+
+        </div>
+
+
+        <div class="goals-grid">
+
+          <!-- GOAL 1 -->
+          <div class="goal-card">
+
+            <div class="goal-top">
+
+              <div class="goal-icon">💻</div>
+
+              <div class="goal-info">
+                <h3>New MacBook Pro</h3>
+                <p>Technology upgrade</p>
+              </div>
+
+              <button
+                class="goal-menu"
+                onclick="showToast('Goal options coming soon')"
+              >
+                ⋯
+              </button>
+
+            </div>
+
+            <div class="goal-amount">
+              <div class="saved">$1,700</div>
+              <div class="target">of $2,500</div>
+            </div>
+
+            <div class="progress">
+              <span style="width: 68%;"></span>
+            </div>
+
+            <div class="goal-footer">
+              <span>68% complete</span>
+              <strong>$800 left</strong>
+            </div>
+
+          </div>
+
+
+          <!-- GOAL 2 -->
+          <div class="goal-card">
+
+            <div class="goal-top">
+
+              <div class="goal-icon">✈</div>
+
+              <div class="goal-info">
+                <h3>Travel Fund</h3>
+                <p>Summer vacation</p>
+              </div>
+
+              <button
+                class="goal-menu"
+                onclick="showToast('Goal options coming soon')"
+              >
+                ⋯
+              </button>
+
+            </div>
+
+            <div class="goal-amount">
+              <div class="saved">$2,850</div>
+              <div class="target">of $4,000</div>
+            </div>
+
+            <div class="progress">
+              <span style="width: 71%;"></span>
+            </div>
+
+            <div class="goal-footer">
+              <span>71% complete</span>
+              <strong>$1,150 left</strong>
+            </div>
+
+          </div>
+
+
+          <!-- GOAL 3 -->
+          <div class="goal-card">
+
+            <div class="goal-top">
+
+              <div class="goal-icon">🏠</div>
+
+              <div class="goal-info">
+                <h3>Emergency Fund</h3>
+                <p>Financial safety net</p>
+              </div>
+
+              <button
+                class="goal-menu"
+                onclick="showToast('Goal options coming soon')"
+              >
+                ⋯
+              </button>
+
+            </div>
+
+            <div class="goal-amount">
+              <div class="saved">$3,250</div>
+              <div class="target">of $6,000</div>
+            </div>
+
+            <div class="progress">
+              <span style="width: 54%;"></span>
+            </div>
+
+            <div class="goal-footer">
+              <span>54% complete</span>
+              <strong>$2,750 left</strong>
+            </div>
+
+          </div>
+
+
+          <!-- GOAL 4 -->
+          <div class="goal-card">
+
+            <div class="goal-top">
+
+              <div class="goal-icon">🎓</div>
+
+              <div class="goal-info">
+                <h3>Education Fund</h3>
+                <p>Future learning</p>
+              </div>
+
+              <button
+                class="goal-menu"
+                onclick="showToast('Goal options coming soon')"
+              >
+                ⋯
+              </button>
+
+            </div>
+
+            <div class="goal-amount">
+              <div class="saved">$620</div>
+              <div class="target">of $2,000</div>
+            </div>
+
+            <div class="progress">
+              <span style="width: 31%;"></span>
+            </div>
+
+            <div class="goal-footer">
+              <span>31% complete</span>
+              <strong>$1,380 left</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- LOWER -->
+    <section>
+      <div class="container">
+
+        <div class="lower-grid">
+
+          <!-- ACTIVITY -->
+          <div class="panel">
+
+            <h2>Saving activity</h2>
+
+            <div class="activity-list">
+
+              <div class="activity">
+
+                <div class="activity-icon">+</div>
+
+                <div class="activity-info">
+                  <strong>Monthly saving</strong>
+                  <small>MacBook Pro · Sep 19, 2026</small>
+                </div>
+
+                <div class="activity-amount">
+                  +$250
+                </div>
+
+              </div>
+
+
+              <div class="activity">
+
+                <div class="activity-icon">+</div>
+
+                <div class="activity-info">
+                  <strong>Automatic transfer</strong>
+                  <small>Emergency Fund · Sep 15, 2026</small>
+                </div>
+
+                <div class="activity-amount">
+                  +$200
+                </div>
+
+              </div>
+
+
+              <div class="activity">
+
+                <div class="activity-icon">+</div>
+
+                <div class="activity-info">
+                  <strong>Travel contribution</strong>
+                  <small>Travel Fund · Sep 10, 2026</small>
+                </div>
+
+                <div class="activity-amount">
+                  +$120
+                </div>
+
+              </div>
+
+
+              <div class="activity">
+
+                <div class="activity-icon">+</div>
+
+                <div class="activity-info">
+                  <strong>Education contribution</strong>
+                  <small>Education Fund · Sep 05, 2026</small>
+                </div>
+
+                <div class="activity-amount">
+                  +$50
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- PLAN -->
+          <div class="panel">
+
+            <h2>Monthly saving plan</h2>
+
+            <div class="plan-card">
+
+              <div class="plan-top">
+                <strong>September target</strong>
+                <span>$620 / $800</span>
+              </div>
+
+              <div class="progress">
+                <span style="width: 77.5%;"></span>
+              </div>
+
+              <p>
+                You are $180 away from reaching this month's saving target.
+              </p>
+
+            </div>
+
+
+            <div class="plan-card">
+
+              <div class="plan-top">
+                <strong>Average monthly saving</strong>
+                <span>$740</span>
+              </div>
+
+              <div class="progress">
+                <span style="width: 82%;"></span>
+              </div>
+
+              <p>
+                Your average saving has increased over the last three months.
+              </p>
+
+            </div>
+
+
+            <div class="plan-card">
+
+              <div class="plan-top">
+                <strong>Next milestone</strong>
+                <span>$10,000</span>
+              </div>
+
+              <div class="progress">
+                <span style="width: 84%;"></span>
+              </div>
+
+              <p>
+                $1,580 remaining until your total savings reach $10,000.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- CTA -->
+    <section>
+      <div class="container">
+
+        <div class="saving-cta">
+
+          <div>
+            <h2>Make saving automatic.</h2>
+
+            <p>
+              Build a consistent saving habit by planning contributions
+              around your monthly income and financial goals.
+            </p>
+          </div>
+
+          <button
+            class="cta-button"
+            onclick="showToast('Automatic saving feature coming soon')"
+          >
+            Set saving plan
+          </button>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div class="footer-brand">
+
+          <div class="logo">
+            <span class="logo-mark">F</span>
+            <span>Finora</span>
+          </div>
+
+          <p>
+            A modern personal finance experience designed to make
+            money management simpler and clearer.
+          </p>
+
+        </div>
+
+
+        <div>
+          <h4>Product</h4>
+          <a href="transactions.html">Transactions</a>
+          <a href="budget.html">Budget</a>
+          <a href="savings.html">Savings</a>
+          <a href="analytics.html">Analytics</a>
+        </div>
+
+
+        <div>
+          <h4>Company</h4>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+        </div>
+
+
+        <div>
+          <h4>Resources</h4>
+          <a href="#">Financial Guide</a>
+          <a href="#">Help Center</a>
+          <a href="#">Security</a>
+          <a href="#">Updates</a>
+        </div>
+
+      </div>
+
+
+      <div class="copyright">
+        <span>© 2026 Finora. All rights reserved.</span>
+        <span>Built for modern money management.</span>
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("mobileMenu");
+      menu.classList.toggle("show");
+    }
+
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(window.finoraToastTimer);
+
+      window.finoraToastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+
+
+    document.addEventListener("click", function(event) {
+
+      const menu = document.getElementById("mobileMenu");
+      const toggle = document.querySelector(".menu-toggle");
+
+      if (
+        menu.classList.contains("show") &&
+        !menu.contains(event.target) &&
+        !toggle.contains(event.target)
+      ) {
+        menu.classList.remove("show");
+      }
+
+    });
+  </script>
+
+</body>
+                </html>
